@@ -38,8 +38,15 @@ void dmpDataReady()
 
 void setup()
 {
-  //Configure Serial Port
+    //Configure Serial Port
     Serial.begin(115200);
+    //Echo formulae
+    //Log("accel # %f"  "\t%f"  "\t%f"  "\n", (float)aa.x / 16384 * 2, (float)aa.y / 16384 * 2, (float)aa.z / 16384 * 2);
+    Log("");
+    Serial.print("acc => (float)aa.x / 16384 * 2 || ");
+    //Log("euler # %f\t%f\t%f\n", euler[0] / 3.14159265 * 180, euler[1] / 3.14159265 * 180, euler[2] / 3.14159265 * 180);
+    Log("euler => euler[0] / 3.14159265 * 180");
+    
   // join I2C bus (I2Cdev library doesn't do this automatically)
   #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
   	Wire.begin();
@@ -135,17 +142,35 @@ void loop()
   			mpu.dmpGetAccel(&aa, fifoBuffer);				//Total Acceleration with gravity
   			mpu.dmpGetGravity(&gravity, &q);				//Gravity vector
   			mpu.dmpGetLinearAccel(&aaReal, &aa, &gravity);	//Real acceleration without gravity
-  			mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+  			//mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
   			mpu.dmpGetEuler(euler, &q);
   			//Log("gravity # %f\t%f\t%f\n", gravity.x, gravity.y, gravity.z);
   			//Log("accel # %f"  "\t%f"  "\t%f"  "\n", (float)aa.x / 16384 * 2, (float)aa.y / 16384 * 2, (float)aa.z / 16384 * 2);
   			//Log("ypr # %f\t%f\t%f\n", ypr[0], ypr[1], ypr[2]);
   			//Log("euler # %f\t%f\t%f\n", euler[0] / 3.14159265 * 180, euler[1] / 3.14159265 * 180, euler[2] / 3.14159265 * 180);
-                        Serial.print(euler[0] / 3.14159265 * 180);
+                        
+                        //Print gravity
+                        Serial.print(gravity.x);
                         Serial.print('\t');
-                        Serial.print(euler[1] / 3.14159265 * 180);
+                        Serial.print(gravity.y);
                         Serial.print('\t');
-                        Serial.print(euler[2] / 3.14159265 * 180);
+                        Serial.print(gravity.z);
+                        Serial.print('\t');
+                        
+                        //Print acceleration
+                        Serial.print(aa.x);
+                        Serial.print('\t');
+                        Serial.print(aa.y);
+                        Serial.print('\t');
+                        Serial.print(aa.z);
+                        Serial.print('\t');
+                        
+                        //Print Euler angle
+                        Serial.print(euler[0]);
+                        Serial.print('\t');
+                        Serial.print(euler[1]);
+                        Serial.print('\t');
+                        Serial.print(euler[2]);
                         Serial.print('\t');
                         Serial.println(millis());
   		}
