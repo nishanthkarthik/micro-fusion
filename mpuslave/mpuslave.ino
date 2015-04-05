@@ -146,7 +146,7 @@ void loop()
                         Serial.print(euler[1] / 3.14159265 * 180);
                         Serial.print('\t');
                         Serial.print(euler[2] / 3.14159265 * 180);
-                        Serial.println('\t');
+                        Serial.println('\0');
   		}
   	}
   	// blink LED to indicate activity
