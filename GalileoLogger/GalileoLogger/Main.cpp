@@ -1,7 +1,6 @@
 #pragma region Preprocessor
 #include "stdafx.h"
 #include "arduino.h"
-#include "SoftwareSerial.h"
 #include <fstream>
 using namespace std;
 #pragma endregion
@@ -12,7 +11,6 @@ int _tmain(int argc, _TCHAR* argv[])
 }
 
 #pragma region GlobalVars
-SoftwareSerial auxSerial(10, 11);	//TX,RX
 String bufferString;
 #pragma endregion
 
@@ -29,21 +27,20 @@ void LogToFile(String data, char* filename)
 
 void setup()
 {
-	auxSerial.begin(115200);
-	auxSerial.listen();
+	Serial.begin(CBR_115200, Serial.SERIAL_7O2);
 }
 
 // the loop routine runs over and over again forever:
 void loop()
 {
-	if (auxSerial.available() > 100)
+	if (Serial.available() > 100)
 	{
-		bufferString = auxSerial.readStringUntil('\0');
+		bufferString = Serial.readStringUntil('\0');
 		LogToFile(bufferString, "C:\\SerialLog.txt");
 	}
 }
 
-void serialEvent1()
+void serialEvent()
 {
 
 }
