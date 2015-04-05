@@ -1,5 +1,5 @@
 #pragma region Preprocessor
-#define IO_BUFFER_SIZE 1000
+#define IO_BUFFER_SIZE 10000
 #define LOG_FILE_PATH "C:\\SerialLog.txt"
 #include "stdafx.h"
 #include "arduino.h"
@@ -60,6 +60,7 @@ void InitiateSession(char* filename)
 void setup()
 {
 	Serial.begin(CBR_115200, Serial.SERIAL_7O2);
+	InitiateSession(LOG_FILE_PATH);
 }
 
 // the loop routine runs over and over again forever:
