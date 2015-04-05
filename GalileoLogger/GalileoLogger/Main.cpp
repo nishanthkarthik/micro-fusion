@@ -1,7 +1,10 @@
 #pragma region Preprocessor
+#define IO_BUFFER_SIZE 1000
+#define LOG_FILE_PATH "C:\\SerialLog.txt"
 #include "stdafx.h"
 #include "arduino.h"
 #include <fstream>
+#include <ctime>
 using namespace std;
 #pragma endregion
 
@@ -11,16 +14,45 @@ int _tmain(int argc, _TCHAR* argv[])
 }
 
 #pragma region GlobalVars
-String bufferString;
+char bufferIO;
+char fileBuffer[IO_BUFFER_SIZE];
+int fileBufferCounter = 0;
 #pragma endregion
 
 #pragma region Methods
-void LogToFile(String data, char* filename)
+void LogToFile(char data, char* filename)
+{
+	if (fileBufferCounter < IO_BUFFER_SIZE - 2)
+	{
+		fileBuffer[fileBufferCounter++] = data;
+	}
+	else if (fileBufferCounter == IO_BUFFER_SIZE - 2)
+	{
+		fileBuffer[IO_BUFFER_SIZE - 2] = data;
+		ofstream outstream;
+		outstream.open(filename, ios::app);
+		outstream << fileBuffer;
+		Log("%s", fileBuffer);
+		outstream.close();
+		fileBufferCounter = 0;
+	}
+}
+
+void InitiateSession(char* filename)
 {
 	ofstream outstream;
 	outstream.open(filename, ios::app);
-	outstream << data;
-	Log(data.c_str());
+	time_t timenow = time(0);
+	struct tm * now = localtime(&timenow);
+	outstream << (now->tm_year + 1900) << '-'
+		<< (now->tm_mon + 1) << '-'
+		<< now->tm_mday << '\t'
+		<< now->tm_hour << ':'
+		<< now->tm_min << ':'
+		<< now->tm_sec
+		<< endl;
+
+	Log("File IO timestamp noted");
 	outstream.close();
 }
 #pragma endregion
@@ -33,10 +65,11 @@ void setup()
 // the loop routine runs over and over again forever:
 void loop()
 {
-	if (Serial.available() > 100)
+	int temp = Serial.available();
+	if (Serial.available() > 0)
 	{
-		bufferString = Serial.readStringUntil('\0');
-		LogToFile(bufferString, "C:\\SerialLog.txt");
+		Serial.readBytes(&bufferIO, 1);
+		LogToFile(bufferIO, LOG_FILE_PATH);
 	}
 }
 
