@@ -21,7 +21,7 @@ for ($i = 0; $i -le $inarraymod.Count; ++$i)
 
 for ($j = 0; $j -le $inarraymod.Count; ++$j)
 {
-    $writer.WriteLine($inarraymod[$j]);
+    $writer.Write($inarraymod[$j]);
 }
 echo ('Result file written at ' + $targetfilepath)
 $writer.Close();
