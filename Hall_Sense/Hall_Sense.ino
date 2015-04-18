@@ -1,28 +1,26 @@
 #define LINE_COUNT 50
-#define HALL_SENSOR A4
+#define HALL_SENSOR 2
+#define HALL_SENSOR_INT 0
 
-int oldPinValue;
-int nowPinValue;
-long oldTimeStamp;
-long nowTimeStamp;
+volatile long oldTimeStamp;
+
+void Int_Hall()
+{
+  int currTimeStamp = millis();
+  Serial.println((float)60000 / (currTimeStamp - oldTimeStamp));
+  oldTimeStamp = currTimeStamp;
+}
 
 void setup() 
 {
+  digitalWrite(HALL_SENSOR, HIGH);
+  attachInterrupt(HALL_SENSOR_INT, Int_Hall, RISING);
   Serial.begin(115200);
-  oldTimeStamp = millis();
-  oldPinValue = returnLineCount(analogRead(HALL_SENSOR));
 }
 
 void loop() 
 {
-  nowPinValue = returnLineCount(analogRead(HALL_SENSOR));
-  if (nowPinValue - oldPinValue >= 2)
-  {
-    nowTimeStamp = millis();
-    Serial.println(nowTimeStamp - oldTimeStamp);
-    oldTimeStamp = nowTimeStamp;
-  }
-  oldPinValue = nowPinValue;
+  
 }
 
 int returnLineCount(int value)
