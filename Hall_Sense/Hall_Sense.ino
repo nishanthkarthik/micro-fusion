@@ -1,8 +1,10 @@
 #define LINE_COUNT 50
+#include <PinChangeInt.h>
 
 void setup() 
 {
   Serial.begin(115200);
+  
 }
 
 void loop() 
@@ -12,7 +14,7 @@ void loop()
 
 int returnLineCount(int value)
 {
-  return value / 1024 * LINE_COUNT;
+  return (float)value / 1024 * LINE_COUNT;
 }
 
 void printLines(int value)
